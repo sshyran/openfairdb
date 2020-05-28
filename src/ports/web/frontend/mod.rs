@@ -11,10 +11,10 @@ use maud::Markup;
 use num_traits::FromPrimitive;
 use rocket::{
     self,
-    http::RawStr,
+    http::{ContentType, RawStr},
     request::Form,
     response::{
-        content::{Css, JavaScript},
+        content::{Content, Css, Html, JavaScript},
         Flash, Redirect,
     },
     Route,
@@ -29,6 +29,9 @@ mod view;
 
 const MAP_JS: &str = include_str!("map.js");
 const MAIN_CSS: &str = include_str!("main.css");
+const APP_HTML: &str = include_str!("../../../../ofdb-app/index.html");
+const APP_JS: &str = include_str!("../../../../ofdb-app/pkg/ofdb_app.js");
+const APP_WASM: &[u8] = include_bytes!("../../../../ofdb-app/pkg/ofdb_app_bg.wasm");
 
 type Result<T> = std::result::Result<T, AppError>;
 
@@ -45,6 +48,21 @@ pub fn get_index() -> Markup {
 #[get("/index.html")]
 pub fn get_index_html() -> Markup {
     view::index(None)
+}
+
+#[get("/app.html")]
+pub fn get_app_html() -> Html<&'static str> {
+    Html(APP_HTML)
+}
+
+#[get("/pkg/ofdb_app.js")]
+pub fn get_app_js() -> JavaScript<&'static str> {
+    JavaScript(APP_JS)
+}
+
+#[get("/pkg/ofdb_app_bg.wasm")]
+pub fn get_app_wasm() -> Content<&'static [u8]> {
+    Content(ContentType::WASM, APP_WASM)
 }
 
 #[get("/search?<q>&<limit>")]
@@ -362,6 +380,9 @@ pub fn post_ratings_archive(
 
 pub fn routes() -> Vec<Route> {
     routes![
+        get_app_html,
+        get_app_js,
+        get_app_wasm,
         get_index_user,
         get_index,
         get_index_html,
