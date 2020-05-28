@@ -9,4 +9,6 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
+ofdb-boundary = "*"
+ofdb-entities = "*"
 seed = "*"
