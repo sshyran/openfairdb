@@ -3,7 +3,7 @@
 // TODO:     infrastructure::db::{sqlite::Connections, tantivy},
 // TODO:     ports::web::tests::{prelude::*, register_user},
 // TODO: };
-// TODO: 
+// TODO:
 // TODO: fn setup() -> (
 // TODO:     rocket::local::Client,
 // TODO:     sqlite::Connections,
@@ -11,7 +11,7 @@
 // TODO: ) {
 // TODO:     crate::ports::web::tests::setup(vec![("/", super::routes())])
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: fn create_user(pool: &Connections, name: &str, role: Role) {
 // TODO:     let email = format!("{}@example.com", name);
 // TODO:     register_user(&pool, &email, "secret", true);
@@ -19,7 +19,7 @@
 // TODO:     user.role = role;
 // TODO:     pool.exclusive().unwrap().update_user(&user).unwrap();
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: fn get_user(pool: &Connections, name: &str) -> User {
 // TODO:     let email = format!("{}@example.com", name);
 // TODO:     pool.shared()
@@ -30,7 +30,7 @@
 // TODO:         .next()
 // TODO:         .unwrap()
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: fn login_user(client: &Client, name: &str) {
 // TODO:     client
 // TODO:         .post("/login")
@@ -38,12 +38,12 @@
 // TODO:         .body(format!("email={}%40example.com&password=secret", name))
 // TODO:         .dispatch();
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: mod events {
 // TODO:     use super::*;
 // TODO:     use crate::infrastructure::flows::prelude as flows;
 // TODO:     use chrono::prelude::*;
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn search_events() {
 // TODO:         let (client, db, mut search_engine) = setup();
@@ -113,7 +113,7 @@
 // TODO:             }
 // TODO:             event_ids
 // TODO:         };
-// TODO: 
+// TODO:
 // TODO:         // All events
 // TODO:         let mut res = client.get("/events").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -122,7 +122,7 @@
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[3])));
-// TODO: 
+// TODO:
 // TODO:         // Search with simple text
 // TODO:         let mut res = client.get("/events?text=foo").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -131,7 +131,7 @@
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[3])));
-// TODO: 
+// TODO:
 // TODO:         // Search with hashtag text
 // TODO:         let mut res = client.get("/events?text=%23foo").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -140,7 +140,7 @@
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[3])));
-// TODO: 
+// TODO:
 // TODO:         // Search with tag
 // TODO:         let mut res = client.get("/events?tag=foo").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -149,7 +149,7 @@
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[3])));
-// TODO: 
+// TODO:
 // TODO:         // Search with simple text (not found)
 // TODO:         let mut res = client.get("/events?text=bar").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -158,7 +158,7 @@
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[3])));
-// TODO: 
+// TODO:
 // TODO:         // Search with hashtag text (not found)
 // TODO:         let mut res = client.get("/events?text=%23bar").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -167,7 +167,7 @@
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[3])));
-// TODO: 
+// TODO:
 // TODO:         // Search with tag (not found)
 // TODO:         let mut res = client.get("/events?tag=bar").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -177,7 +177,7 @@
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[3])));
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn get_a_list_of_events_filtered_by_tags() {
 // TODO:         let (client, db, mut search_engine) = setup();
@@ -234,14 +234,14 @@
 // TODO:             }
 // TODO:             event_ids
 // TODO:         };
-// TODO: 
+// TODO:
 // TODO:         let mut res = client.get("/events?tag=blub&tag=bli").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
 // TODO:         let body_str = res.body().and_then(|b| b.into_string()).unwrap();
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[0])));
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
-// TODO: 
+// TODO:
 // TODO:         let mut res = client.get("/events?tag=blub").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
 // TODO:         let body_str = res.body().and_then(|b| b.into_string()).unwrap();
@@ -249,7 +249,7 @@
 // TODO:         assert!(body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[1])));
 // TODO:         assert!(!body_str.contains(&format!("<li><a href=\"/events/{}\">", event_ids[2])));
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn get_a_single_event() {
 // TODO:         let (client, db, _) = setup();
@@ -270,14 +270,14 @@
 // TODO:             image_url: None,
 // TODO:             image_link_url: None,
 // TODO:         }];
-// TODO: 
+// TODO:
 // TODO:         {
 // TODO:             let db_conn = db.exclusive().unwrap();
 // TODO:             for e in events {
 // TODO:                 db_conn.create_event(e).unwrap();
 // TODO:             }
 // TODO:         }
-// TODO: 
+// TODO:
 // TODO:         let mut res = client.get("/events/1234").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
 // TODO:         let body_str = res.body().and_then(|b| b.into_string()).unwrap();
@@ -285,7 +285,7 @@
 // TODO:         assert!(body_str.contains("Foo bar baz</p>"));
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: mod index {
 // TODO:     use super::*;
 // TODO:     #[test]
@@ -293,23 +293,23 @@
 // TODO:         let (client, _db, _) = setup();
 // TODO:         let mut index = client.get("/").dispatch();
 // TODO:         assert_eq!(index.status(), Status::Ok);
-// TODO: 
+// TODO:
 // TODO:         let mut index_html = client.get("/index.html").dispatch();
 // TODO:         assert_eq!(index_html.status(), Status::Ok);
-// TODO: 
+// TODO:
 // TODO:         let index_str = index.body().and_then(|b| b.into_string()).unwrap();
 // TODO:         let index_html_str = index_html.body().and_then(|b| b.into_string()).unwrap();
-// TODO: 
+// TODO:
 // TODO:         assert_eq!(index_html_str, index_str);
 // TODO:         assert!(index_str.contains("<form action=\"search\""));
 // TODO:         assert!(index_str.contains("<input type=\"text\""));
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: mod entry {
 // TODO:     use super::*;
 // TODO:     use crate::{core::usecases, infrastructure::flows};
-// TODO: 
+// TODO:
 // TODO:     fn create_place_with_rating(
 // TODO:         db: &sqlite::Connections,
 // TODO:         search: &mut tantivy::SearchEngine,
@@ -350,7 +350,7 @@
 // TODO:         let (r_id, c_id) = flows::prelude::create_rating(db, search, r).unwrap();
 // TODO:         (e_id.into(), r_id, c_id)
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn get_entry_details() {
 // TODO:         let (client, db, mut search) = setup();
@@ -364,7 +364,7 @@
 // TODO:             false
 // TODO:         );
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn get_entry_details_as_admin() {
 // TODO:         let (client, db, mut search) = setup();
@@ -380,7 +380,7 @@
 // TODO:             true
 // TODO:         );
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn get_entry_details_as_scout() {
 // TODO:         let (client, db, mut search) = setup();
@@ -396,7 +396,7 @@
 // TODO:             true
 // TODO:         );
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn archive_comment_as_admin() {
 // TODO:         let (client, db, mut search) = setup();
@@ -418,7 +418,7 @@
 // TODO:             _ => panic!("Expected {}", RepoError::NotFound),
 // TODO:         }
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn archive_comment_as_scout() {
 // TODO:         let (client, db, mut search) = setup();
@@ -440,7 +440,7 @@
 // TODO:             _ => panic!("Expected {}", RepoError::NotFound),
 // TODO:         }
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn archive_comment_as_guest() {
 // TODO:         let (client, db, mut search) = setup();
@@ -454,7 +454,7 @@
 // TODO:         let comment = db.shared().unwrap().load_comment(&c_id).unwrap();
 // TODO:         assert!(comment.archived_at.is_none());
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn archive_rating_as_guest() {
 // TODO:         let (client, db, mut search) = setup();
@@ -467,10 +467,10 @@
 // TODO:         assert_eq!(res.status(), Status::NotFound);
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: mod admin {
 // TODO:     use super::*;
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn change_user_role() {
 // TODO:         let (client, db, _) = setup();
@@ -491,15 +491,15 @@
 // TODO:         assert_eq!(user.role, Role::Scout);
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: mod pw_reset {
 // TODO:     use super::*;
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn reset_password() {
 // TODO:         let (client, db, _) = setup();
 // TODO:         register_user(&db, "user@example.com", "secret", true);
-// TODO: 
+// TODO:
 // TODO:         // User opens the form to request a new password
 // TODO:         let mut res = client.get("/reset-password").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
@@ -508,7 +508,7 @@
 // TODO:         assert!(body_str.contains("action=\"/users/actions/reset-password-request\""));
 // TODO:         assert!(body_str.contains("name=\"email\""));
 // TODO:         assert!(body_str.contains("type=\"submit\""));
-// TODO: 
+// TODO:
 // TODO:         // User sends the request
 // TODO:         let res = client
 // TODO:             .post("/users/actions/reset-password-request")
@@ -522,13 +522,13 @@
 // TODO:             .find(|h| h.name.as_str() == "Location")
 // TODO:             .unwrap();
 // TODO:         assert_eq!(h.value, "/reset-password?success=true");
-// TODO: 
+// TODO:
 // TODO:         // User gets a sucess message
 // TODO:         let mut res = client.get("/reset-password?success=true").dispatch();
 // TODO:         assert_eq!(res.status(), Status::Ok);
 // TODO:         let body_str = res.body().and_then(|b| b.into_string()).unwrap();
 // TODO:         assert!(body_str.contains("success"));
-// TODO: 
+// TODO:
 // TODO:         // User gets an email with the corresponding token
 // TODO:         let token = db
 // TODO:             .shared()
@@ -537,7 +537,7 @@
 // TODO:             .unwrap()
 // TODO:             .email_nonce
 // TODO:             .encode_to_string();
-// TODO: 
+// TODO:
 // TODO:         // User opens the link
 // TODO:         let mut res = client
 // TODO:             .get(format!("/reset-password?token={}", token))
@@ -550,7 +550,7 @@
 // TODO:         assert!(body_str.contains("name=\"new_password_repeated\""));
 // TODO:         assert!(body_str.contains("name=\"token\""));
 // TODO:         assert!(body_str.contains("type=\"submit\""));
-// TODO: 
+// TODO:
 // TODO:         // User send the new password to the server
 // TODO:         let res = client
 // TODO:             .post("/users/actions/reset-password")
@@ -576,7 +576,7 @@
 // TODO:         assert_eq!(res.status(), Status::Ok);
 // TODO:         let body_str = res.body().and_then(|b| b.into_string()).unwrap();
 // TODO:         assert!(body_str.contains("success"));
-// TODO: 
+// TODO:
 // TODO:         // User can't login with old password
 // TODO:         let res = client
 // TODO:             .post("/login")
@@ -590,7 +590,7 @@
 // TODO:             .find(|h| h.name.as_str() == "Location")
 // TODO:             .unwrap();
 // TODO:         assert_eq!(h.value, "/login");
-// TODO: 
+// TODO:
 // TODO:         // User can login with the new password
 // TODO:         let res = client
 // TODO:             .post("/login")

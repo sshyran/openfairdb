@@ -3,9 +3,10 @@ use std::{env, path::Path, process::Command};
 const APP_NAME: &str = "ofdb-app";
 const APP_PKG_DIR: &str = "ofdb-app";
 const APP_PKG_SRC: &str = "ofdb-app/src";
+const FEATURE_NAME: &str = "app";
 
 fn main() {
-    if env::var("CARGO_FEATURE_DIAGNOSIS").is_ok() {
+    if env::var(format!("CARGO_FEATURE_{}", FEATURE_NAME.to_uppercase())).is_ok() {
         assert_wasm_pack_is_installed();
         Command::new("wasm-pack")
             .args(&[

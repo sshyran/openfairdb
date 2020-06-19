@@ -1,49 +1,41 @@
 use crate::{Mdl, Msg, Page};
 use ofdb_entities::{address::*, location::*, place::*};
 use seed::{prelude::*, *};
+// TODO: use num_traits::ToPrimitive;
 
-pub struct FlashMessage;
+pub struct FlashMessage {
+    name: String,
+    msg: String,
+}
 
 impl FlashMessage {
     fn name(&self) -> &str {
-        todo!()
+        &self.name
     }
     fn msg(&self) -> &str {
-        todo!()
+        &self.msg
     }
 }
 
-pub fn view(mdl: &Mdl) -> Node<Msg> {
-    match mdl.page {
-        Page::Home => index(None),
-        Page::Login => login::login(None, "/reset-password"),
-        Page::Events => event::events(None, &vec![]),
-        Page::NotFound => index(None),
-    }
-}
+pub mod dashboard;
+pub mod entry;
+pub mod event;
+pub mod login;
+pub mod page;
+pub mod password;
+pub mod place;
+pub mod register;
 
-// TODO: use num_traits::ToPrimitive;
-// TODO: const MAP_JS_URL: &str = "/map.js";
+pub use dashboard::*;
+pub use entry::*;
+pub use event::*;
+pub use login::*;
+use page::*;
+pub use password::*;
+pub use place::*;
+pub use register::*;
 
-mod dashboard;
-mod entry;
-mod event;
-mod login;
-mod page;
-mod password;
-mod place;
-mod register;
-
-// TODO: pub use dashboard::*;
-// TODO: pub use entry::*;
-// TODO: pub use event::*;
-// TODO: pub use login::*;
-// TODO: use page::*;
-// TODO: pub use password::*;
-// TODO: pub use place::*;
-// TODO: pub use register::*;
-
-fn index(email: Option<&str>) -> Node<Msg> {
+pub fn index(email: Option<&str>) -> Node<Msg> {
     page::page(
         "OpenFairDB Search",
         email,
@@ -66,12 +58,12 @@ fn global_search_form(search_term: Option<&str>) -> Node<Msg> {
                 At::Method=> "GET";
             },
             input![attrs! {
-                                        At::Type=>"text";
-                                        At::Name=>"q";
-                                        At::Value => search_term.unwrap_or("");
-                                        At::Size=> 50;
-                                        At::MaxLength=>200;
-                                        At::Placeholder=> "search term, empty = all";
+                At::Type=>"text";
+                At::Name=>"q";
+                At::Value => search_term.unwrap_or("");
+                At::Size=> 50;
+                At::MaxLength=>200;
+                At::Placeholder=> "search term, empty = all";
             }],
             br![],
             input![
@@ -85,64 +77,71 @@ fn global_search_form(search_term: Option<&str>) -> Node<Msg> {
     ]
 }
 
-// TODO: pub fn search_results(email: Option<&str>, search_term: &str, entries: &[IndexedPlace]) -> Markup {
-// TODO:     page(
-// TODO:         "OpenFairDB Search Results",
-// TODO:         email,
-// TODO:         None,
-// TODO:         None,
-// TODO:         html! {
-// TODO:             div class="search" {
-// TODO:                 h1 {"OpenFairDB Search"}
-// TODO:                 (global_search_form(Some(search_term)))
-// TODO:             }
-// TODO:             div class="results" {
-// TODO:                 @if entries.is_empty(){
-// TODO:                     p{ "We are so sorry but we could not find any entries
-// TODO:                         that are related to your search term "
-// TODO:                             em {
-// TODO:                                 (format!("'{}'", search_term))
-// TODO:                             }
-// TODO:                     }
-// TODO:                 } @else {
-// TODO:                     p {
-// TODO:                         ul class="result-list" {
-// TODO:                             @for e in entries {
-// TODO:                                 li{
-// TODO:                                     (entry_result(e))
-// TODO:                                 }
-// TODO:                             }
-// TODO:                         }
-// TODO:                     }
-// TODO:                 }
-// TODO:             }
-// TODO:         },
-// TODO:     )
-// TODO: }
-// TODO:
-// TODO: fn entry_result(e: &IndexedPlace) -> Markup {
-// TODO:     html! {
-// TODO:         h3 {
-// TODO:             a href=(format!("entries/{}",e.id)) {(e.title)}
-// TODO:         }
-// TODO:         p {(e.description)}
-// TODO:     }
-// TODO: }
+pub fn search_results(email: Option<&str>, search_term: &str, entries: &[Place]) -> Node<Msg> {
+    page(
+        "OpenFairDB Search Results",
+        email,
+        None,
+        None,
+        div![
+            div![
+                class!["search"],
+                h1!["OpenFairDB Search"],
+                global_search_form(Some(search_term))
+            ],
+            div![
+                class!["results"],
+                if entries.is_empty() {
+                    p![
+                        "We are so sorry but we could not find any entries
+                                 that are related to your search term ",
+                        em![format!("'{}'", search_term)]
+                    ]
+                } else {
+                    p![ul![
+                        class!["result-list"],
+                        entries.iter().map(|e| li![entry_result(e)])
+                    ]]
+                }
+            ]
+        ],
+    )
+}
+
+fn entry_result(e: &Place) -> Vec<Node<Msg>> {
+    vec![
+        h3![a![
+            attrs! {
+                At::Href => format!("entries/{}",e.id);
+            },
+            &e.title
+        ]],
+        p![&e.description],
+    ]
+}
 
 fn address_to_html(addr: &Address) -> Vec<Node<Msg>> {
     vec![
-    // TODO: @if let Some(ref s) = addr.street {
-    // TODO:     (s) br;
-    // TODO: }
-    // TODO: @if let Some(ref z) = addr.zip {
-    // TODO:     (z)
-    // TODO: }
-    // TODO: @if let Some(ref z) = addr.city {
-    // TODO:     (z) br;
-    // TODO: }
-    // TODO: @if let Some(ref c) = addr.country {
-    // TODO:     (c)
-    // TODO: }
+        if let Some(ref s) = addr.street {
+            span![s, br![]]
+        } else {
+            empty!()
+        },
+        if let Some(ref z) = addr.zip {
+            span![z]
+        } else {
+            empty!()
+        },
+        if let Some(ref z) = addr.city {
+            span![z, br![]]
+        } else {
+            empty!()
+        },
+        if let Some(ref c) = addr.country {
+            span![c]
+        } else {
+            empty!()
+        },
     ]
 }
 

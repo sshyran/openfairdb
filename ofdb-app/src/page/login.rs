@@ -1,23 +1,23 @@
-// TODO: use super::super::guards::*;
-// TODO: use super::view;
-// TODO: use crate::{
-// TODO:     core::{prelude::*, usecases},
-// TODO:     ports::web::sqlite::Connections,
-// TODO: };
-// TODO: use maud::Markup;
-// TODO: use rocket::{
-// TODO:     self,
-// TODO:     http::{Cookie, Cookies},
-// TODO:     request::{FlashMessage, Form},
-// TODO:     response::{Flash, Redirect},
-// TODO: };
-// TODO: 
+use crate::Msg;
+use seed::prelude::*;
+
 // TODO: #[derive(FromForm)]
 // TODO: pub struct LoginCredentials {
 // TODO:     pub email: String,
 // TODO:     password: String,
 // TODO: }
-// TODO: 
+
+#[derive(Debug)]
+pub struct Mdl {}
+
+pub fn init(mut url: Url) -> Option<Mdl> {
+    todo!()
+}
+
+pub fn view(mdl: &Mdl) -> Node<Msg> {
+    crate::view::login::login(None, "/reset-password")
+}
+
 // TODO: impl<'a> LoginCredentials {
 // TODO:     pub fn as_login(&'a self) -> usecases::Credentials<'a> {
 // TODO:         let LoginCredentials {
@@ -27,17 +27,17 @@
 // TODO:         usecases::Credentials { email, password }
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/login")]
 // TODO: pub fn get_login_user(_account: Account) -> Redirect {
 // TODO:     Redirect::to(uri!(super::get_index))
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/login", rank = 2)]
 // TODO: pub fn get_login(flash: Option<FlashMessage>) -> Markup {
 // TODO:     view::login(flash, "/reset-password")
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/login", data = "<credentials>")]
 // TODO: pub fn post_login(
 // TODO:     db: Connections,
@@ -72,7 +72,7 @@
 // TODO:         }
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/logout")]
 // TODO: pub fn post_logout(mut cookies: Cookies) -> Flash<Redirect> {
 // TODO:     cookies.remove_private(Cookie::named(COOKIE_EMAIL_KEY));
@@ -81,7 +81,7 @@
 // TODO:         "Sie haben sich erfolgreich abgemeldet.",
 // TODO:     )
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[cfg(test)]
 // TODO: pub mod tests {
 // TODO:     use super::*;
@@ -90,12 +90,12 @@
 // TODO:         tests::{prelude::*, register_user},
 // TODO:     };
 // TODO:     use rocket::http::Status as HttpStatus;
-// TODO: 
+// TODO:
 // TODO:     fn setup() -> (Client, Connections) {
 // TODO:         let (client, db, _) = web::tests::setup(vec![("/", super::super::routes())]);
 // TODO:         (client, db)
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     fn user_id_cookie(response: &Response) -> Option<Cookie<'static>> {
 // TODO:         let cookie = response
 // TODO:             .headers()
@@ -104,7 +104,7 @@
 // TODO:             .and_then(|val| Cookie::parse_encoded(val).ok());
 // TODO:         cookie.map(|c| c.into_owned())
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn get_login() {
 // TODO:         let (client, _) = setup();
@@ -114,7 +114,7 @@
 // TODO:         assert!(body_str.contains("action=\"login\""));
 // TODO:         assert!(user_id_cookie(&res).is_none());
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn post_login_fails() {
 // TODO:         let (client, pool) = setup();
@@ -133,7 +133,7 @@
 // TODO:             }
 // TODO:         }
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     #[test]
 // TODO:     fn post_login_sucess() {
 // TODO:         let (client, pool) = setup();

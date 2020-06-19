@@ -1,77 +1,61 @@
-// TODO: use crate::{
-// TODO:     core::{
-// TODO:         error::{Error, ParameterError},
-// TODO:         prelude::*,
-// TODO:         usecases,
-// TODO:     },
-// TODO:     infrastructure::{db::sqlite, error::*, flows::prelude::*},
-// TODO:     ports::web::{guards::*, tantivy::SearchEngine},
-// TODO: };
-// TODO: use maud::Markup;
+use seed::prelude::*;
+
 // TODO: use num_traits::FromPrimitive;
-// TODO: use rocket::{
-// TODO:     self,
-// TODO:     http::{ContentType, RawStr},
-// TODO:     request::Form,
-// TODO:     response::{
-// TODO:         content::{Content, Css, Html, JavaScript},
-// TODO:         Flash, Redirect,
-// TODO:     },
-// TODO:     Route,
-// TODO: };
-// TODO: 
-// TODO: mod login;
-// TODO: mod password;
-// TODO: mod register;
-// TODO: #[cfg(test)]
-// TODO: mod tests;
-// TODO: mod view;
-// TODO: 
-// TODO: const MAP_JS: &str = include_str!("map.js");
-// TODO: const MAIN_CSS: &str = include_str!("main.css");
-// TODO: const APP_HTML: &str = include_str!("../../../../ofdb-app/index.html");
-// TODO: const APP_JS: &str = include_str!("../../../../ofdb-app/pkg/ofdb_app.js");
-// TODO: const APP_WASM: &[u8] = include_bytes!("../../../../ofdb-app/pkg/ofdb_app_bg.wasm");
-// TODO: 
+pub mod events;
+pub mod index;
+pub mod login;
+pub mod register;
+pub mod reset_password;
+
+#[derive(Debug)]
+pub enum Page {
+    Home(index::Mdl),
+    Login(login::Mdl),
+    Register(register::Mdl),
+    ResetPassword(reset_password::Mdl),
+    Events(events::Mdl),
+    NotFound,
+}
+
+impl Page {
+    pub fn init(mut url: Url) -> Self {
+        match url.next_path_part() {
+            None => index::init(url).map_or(Self::NotFound, Self::Home),
+            Some("login") => login::init(url).map_or(Self::NotFound, Self::Login),
+            Some("register") => register::init(url).map_or(Self::NotFound, Self::Register),
+            Some("events") => events::init(url).map_or(Self::NotFound, Self::Events),
+            Some("reset-password") => {
+                reset_password::init(url).map_or(Self::NotFound, Self::ResetPassword)
+            }
+            _ => Self::NotFound,
+        }
+    }
+}
+
 // TODO: type Result<T> = std::result::Result<T, AppError>;
-// TODO: 
+
 // TODO: #[get("/")]
 // TODO: pub fn get_index_user(account: Account) -> Markup {
 // TODO:     view::index(Some(&account.email()))
 // TODO: }
-// TODO: 
+
 // TODO: #[get("/", rank = 2)]
 // TODO: pub fn get_index() -> Markup {
 // TODO:     view::index(None)
 // TODO: }
-// TODO: 
+
 // TODO: #[get("/index.html")]
 // TODO: pub fn get_index_html() -> Markup {
 // TODO:     view::index(None)
 // TODO: }
-// TODO: 
-// TODO: #[get("/app.html")]
-// TODO: pub fn get_app_html() -> Html<&'static str> {
-// TODO:     Html(APP_HTML)
-// TODO: }
-// TODO: 
-// TODO: #[get("/pkg/ofdb_app.js")]
-// TODO: pub fn get_app_js() -> JavaScript<&'static str> {
-// TODO:     JavaScript(APP_JS)
-// TODO: }
-// TODO: 
-// TODO: #[get("/pkg/ofdb_app_bg.wasm")]
-// TODO: pub fn get_app_wasm() -> Content<&'static [u8]> {
-// TODO:     Content(ContentType::WASM, APP_WASM)
-// TODO: }
-// TODO: 
+
 // TODO: #[get("/search?<q>&<limit>")]
 // TODO: pub fn get_search(search_engine: SearchEngine, q: &RawStr, limit: Option<usize>) -> Result<Markup> {
 // TODO:     let q = q.url_decode()?;
 // TODO:     let entries = usecases::global_search(&search_engine, &q, limit.unwrap_or(10))?;
 // TODO:     Ok(view::search_results(None, &q, &entries))
 // TODO: }
-// TODO: 
+
 // TODO: #[get("/search-users?<email>")]
 // TODO: pub fn get_search_users(
 // TODO:     pool: sqlite::Connections,
@@ -86,13 +70,13 @@
 // TODO:         Ok(view::user_search_result(&admin.email, &users))
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[derive(FromForm)]
 // TODO: pub struct ChangeUserRoleAction {
 // TODO:     email: String,
 // TODO:     role: u8,
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/change-user-role", data = "<data>")]
 // TODO: pub fn post_change_user_role(
 // TODO:     db: sqlite::Connections,
@@ -114,17 +98,7 @@
 // TODO:         },
 // TODO:     }
 // TODO: }
-// TODO: 
-// TODO: #[get("/map.js")]
-// TODO: pub fn get_map_js() -> JavaScript<&'static str> {
-// TODO:     JavaScript(MAP_JS)
-// TODO: }
-// TODO: 
-// TODO: #[get("/main.css")]
-// TODO: pub fn get_main_css() -> Css<&'static str> {
-// TODO:     Css(MAIN_CSS)
-// TODO: }
-// TODO: 
+
 // TODO: #[get("/places/<id>/history")]
 // TODO: pub fn get_place_history(db: sqlite::Connections, id: &RawStr, account: Account) -> Result<Markup> {
 // TODO:     let db = db.shared()?;
@@ -135,12 +109,12 @@
 // TODO:         // The history contains e-mail addresses of registered users
 // TODO:         // and is only permitted for scouts and admins!
 // TODO:         usecases::authorize_user_by_email(&*db, &account.email(), Role::Scout)?;
-// TODO: 
+// TODO:
 // TODO:         db.get_place_history(&id)?
 // TODO:     };
 // TODO:     Ok(view::place_history(&user, &place_history))
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/places/<id>/review")]
 // TODO: pub fn get_place_review(db: sqlite::Connections, id: &RawStr, account: Account) -> Result<Markup> {
 // TODO:     let db = db.shared()?;
@@ -150,13 +124,13 @@
 // TODO:     let (place, review_status) = db.get_place(&id)?;
 // TODO:     Ok(view::place_review(&reviewer_email, &place, review_status))
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[derive(FromForm)]
 // TODO: pub struct Review {
 // TODO:     pub comment: String,
 // TODO:     pub status: i16,
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/places/<id>/review", data = "<review>")]
 // TODO: pub fn post_place_review(
 // TODO:     db: sqlite::Connections,
@@ -176,7 +150,7 @@
 // TODO:             )
 // TODO:         })
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: fn review_place(
 // TODO:     db: &sqlite::Connections,
 // TODO:     email: &str,
@@ -205,7 +179,7 @@
 // TODO:     }
 // TODO:     Ok(())
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/entries/<id>")]
 // TODO: pub fn get_entry(
 // TODO:     pool: sqlite::Connections,
@@ -230,7 +204,7 @@
 // TODO:         None => view::entry(None, (place, ratings).into()),
 // TODO:     })
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/events/<id>")]
 // TODO: pub fn get_event(
 // TODO:     pool: sqlite::Connections,
@@ -247,14 +221,14 @@
 // TODO:         };
 // TODO:         (user, ev)
 // TODO:     };
-// TODO: 
+// TODO:
 // TODO:     // TODO:Make sure within usecase that the creator email
 // TODO:     // is not shown to unregistered users
 // TODO:     ev.created_by = None;
-// TODO: 
+// TODO:
 // TODO:     Ok(view::event(user, ev))
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/events/<id>/archive")]
 // TODO: pub fn post_archive_event(
 // TODO:     account: Account,
@@ -289,7 +263,7 @@
 // TODO:             Redirect::to("/events") //TODO: use uri! macro
 // TODO:         })
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/events?<query..>")]
 // TODO: pub fn get_events_chronologically(
 // TODO:     db: sqlite::Connections,
@@ -300,7 +274,7 @@
 // TODO:     if query.created_by.is_some() {
 // TODO:         return Err(Error::Parameter(ParameterError::Unauthorized).into());
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     if query.start_min.is_none() && query.start_max.is_none() {
 // TODO:         let start_min = chrono::Utc::now()
 // TODO:             .checked_sub_signed(chrono::Duration::days(1))
@@ -308,12 +282,12 @@
 // TODO:             .naive_utc();
 // TODO:         query.start_min = Some(start_min.into());
 // TODO:     }
-// TODO: 
+// TODO:
 // TODO:     let events = usecases::query_events(&*db.shared()?, &search_engine, query)?;
 // TODO:     let email = account.as_ref().map(Account::email);
 // TODO:     Ok(view::events(email, &events))
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/dashboard")]
 // TODO: pub fn get_dashboard(db: sqlite::Connections, account: Account) -> Result<Markup> {
 // TODO:     let db = db.shared()?;
@@ -335,13 +309,13 @@
 // TODO:     }
 // TODO:     Err(Error::Parameter(ParameterError::Unauthorized).into())
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[derive(FromForm)]
 // TODO: pub struct ArchiveAction {
 // TODO:     ids: String,
 // TODO:     place_id: String,
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/comments/actions/archive", data = "<data>")]
 // TODO: pub fn post_comments_archive(
 // TODO:     account: Account,
@@ -359,7 +333,7 @@
 // TODO:         Ok(_) => Ok(Redirect::to(uri!(get_entry:d.place_id))),
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/ratings/actions/archive", data = "<data>")]
 // TODO: pub fn post_ratings_archive(
 // TODO:     account: Account,
@@ -377,12 +351,9 @@
 // TODO:         Ok(_) => Ok(Redirect::to(uri!(get_entry:d.place_id))),
 // TODO:     }
 // TODO: }
-// TODO: 
+
 // TODO: pub fn routes() -> Vec<Route> {
 // TODO:     routes![
-// TODO:         get_app_html,
-// TODO:         get_app_js,
-// TODO:         get_app_wasm,
 // TODO:         get_index_user,
 // TODO:         get_index,
 // TODO:         get_index_html,

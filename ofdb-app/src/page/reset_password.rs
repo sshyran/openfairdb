@@ -1,17 +1,16 @@
-// TODO: use super::view;
-// TODO: use crate::{
-// TODO:     core::prelude::*,
-// TODO:     infrastructure::flows::prelude::*,
-// TODO:     ports::web::{notify::*, sqlite::Connections},
-// TODO: };
-// TODO: use maud::Markup;
-// TODO: use rocket::{
-// TODO:     self,
-// TODO:     http::RawStr,
-// TODO:     request::{FlashMessage, Form},
-// TODO:     response::{Flash, Redirect},
-// TODO: };
-// TODO: 
+use seed::prelude::*;
+
+#[derive(Debug)]
+pub struct Mdl {}
+
+pub fn init(mut url: Url) -> Option<Mdl> {
+    todo!()
+}
+
+pub fn view<Ms>(mdl: &Mdl) -> Node<Ms> {
+    todo!()
+}
+
 // TODO: #[get("/reset-password?<token>&<success>")]
 // TODO: pub fn get_reset_password(
 // TODO:     flash: Option<FlashMessage>,
@@ -21,7 +20,7 @@
 // TODO:     let success = success
 // TODO:         .map(|raw| raw.as_str())
 // TODO:         .map(|s| s == "true" || s == "1");
-// TODO: 
+// TODO:
 // TODO:     if let Some(token) = token {
 // TODO:         if let Some(true) = success {
 // TODO:             view::reset_password_ack(flash)
@@ -34,12 +33,12 @@
 // TODO:         view::reset_password_request(flash, "/users/actions/reset-password-request")
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[derive(FromForm)]
 // TODO: pub struct ResetPasswordRequest {
 // TODO:     email: String,
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/users/actions/reset-password-request", data = "<data>")]
 // TODO: pub fn post_reset_password_request(
 // TODO:     db: Connections,
@@ -57,21 +56,21 @@
 // TODO:         )),
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[derive(FromForm)]
 // TODO: pub struct ResetPassword {
 // TODO:     token: String,
 // TODO:     new_password: String,
 // TODO:     new_password_repeated: String,
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/users/actions/reset-password", data = "<data>")]
 // TODO: pub fn post_reset_password(
 // TODO:     db: Connections,
 // TODO:     data: Form<ResetPassword>,
 // TODO: ) -> std::result::Result<Redirect, Flash<Redirect>> {
 // TODO:     let req = data.into_inner();
-// TODO: 
+// TODO:
 // TODO:     if req.new_password != req.new_password_repeated {
 // TODO:         return Err(Flash::error(
 // TODO:             Redirect::to(uri!(get_reset_password: token = req.token, success =_)),

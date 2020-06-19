@@ -1,36 +1,22 @@
 use seed::prelude::*;
 
+mod page;
+#[cfg(test)]
+mod tests;
 mod update;
 mod view;
 
+use page::Page;
+
+#[derive(Debug, Default)]
+pub struct Context {
+    user: Option<String>,
+}
+
 #[derive(Debug)]
 pub struct Mdl {
+    ctx: Context,
     page: Page,
-}
-
-impl Default for Mdl {
-    fn default() -> Self {
-        Mdl { page: Page::Home }
-    }
-}
-
-#[derive(Debug)]
-enum Page {
-    Home,
-    Login,
-    Events,
-    NotFound,
-}
-
-impl Page {
-    fn init(mut url: Url) -> Self {
-        match url.next_path_part() {
-            None => Self::Home,
-            Some("login") => Page::Login,
-            Some("events") => Page::Events,
-            _ => Self::NotFound,
-        }
-    }
 }
 
 #[derive(Clone)]
@@ -38,12 +24,26 @@ pub enum Msg {
     UrlChanged(subs::UrlChanged),
 }
 
-fn init(_: Url, orders: &mut impl Orders<Msg>) -> Mdl {
+fn init(url: Url, orders: &mut impl Orders<Msg>) -> Mdl {
     orders.subscribe(Msg::UrlChanged);
-    Mdl::default()
+    Mdl {
+        page: Page::init(url),
+        ctx: Default::default(),
+    }
+}
+
+pub fn view(mdl: &Mdl) -> Node<Msg> {
+    match &mdl.page {
+        Page::Home(mdl) => page::index::view(&mdl),
+        Page::Login(mdl) => page::login::view(&mdl),
+        Page::Register(mdl) => page::register::view(&mdl),
+        Page::ResetPassword(mdl) => page::reset_password::view(&mdl),
+        Page::Events(mdl) => page::events::view(&mdl),
+        Page::NotFound => view::index(None),
+    }
 }
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    App::start("app", init, update::update, view::view);
+    App::start("app", init, update::update, view);
 }

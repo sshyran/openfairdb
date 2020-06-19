@@ -1,22 +1,22 @@
-// TODO: use super::login::LoginCredentials;
-// TODO: use super::view;
-// TODO: use crate::{
-// TODO:     core::{prelude::*, usecases},
-// TODO:     ports::web::{notify::*, sqlite::Connections},
-// TODO: };
-// TODO: use maud::Markup;
-// TODO: use rocket::{
-// TODO:     self,
-// TODO:     http::RawStr,
-// TODO:     request::{FlashMessage, Form},
-// TODO:     response::{Flash, Redirect},
-// TODO: };
-// TODO: 
+use crate::Msg;
+use seed::prelude::*;
+
+#[derive(Debug)]
+pub struct Mdl {}
+
+pub fn init(mut url: Url) -> Option<Mdl> {
+    todo!()
+}
+
+pub fn view(mdl: &Mdl) -> Node<Msg> {
+    crate::view::register::register(None)
+}
+
 // TODO: #[get("/register")]
 // TODO: pub fn get_register(flash: Option<FlashMessage>) -> Markup {
 // TODO:     view::register(flash)
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[post("/register", data = "<credentials>")]
 // TODO: pub fn post_register(
 // TODO:     db: Connections,
@@ -48,7 +48,7 @@
 // TODO:                     if let Ok(user) = db.get_user_by_email(&credentials.email) {
 // TODO:                         debug_assert_eq!(user.email, credentials.email);
 // TODO:                         notify.user_registered_ofdb(&user);
-// TODO: 
+// TODO:
 // TODO:                         let msg = "Registered sucessfully. Please confirm your email address.";
 // TODO:                         return Ok(Flash::success(
 // TODO:                             Redirect::to(uri!(super::login::get_login)),
@@ -64,7 +64,7 @@
 // TODO:         }
 // TODO:     }
 // TODO: }
-// TODO: 
+// TODO:
 // TODO: #[get("/register/confirm/<token>")]
 // TODO: pub fn get_email_confirmation(
 // TODO:     db: Connections,
